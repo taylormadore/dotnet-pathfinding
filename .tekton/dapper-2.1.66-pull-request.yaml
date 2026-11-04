@@ -2,6 +2,8 @@ apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
   annotations:
+    # Each recipe produces an independent snapshot for this component.
+    test.appstudio.openshift.io/ignore-supersession: "true"
     build.appstudio.openshift.io/repo: https://github.com/taylormadore/dotnet-pathfinding?rev={{revision}}
     build.appstudio.redhat.com/commit_sha: '{{revision}}'
     build.appstudio.redhat.com/pull_request_number: '{{pull_request_number}}'
@@ -11,10 +13,8 @@ metadata:
     pipelinesascode.tekton.dev/on-cel-expression: |
       event == "pull_request" && target_branch == "main" && (
         "recipes/Dapper/2.1.66/**".pathChanged() ||
-        ".tekton/dapper-2.1.66-*.yaml".pathChanged() ||
-        ".tekton/build-pipeline.yaml".pathChanged() ||
-        "tasks/**".pathChanged() ||
-        "builder/**".pathChanged()
+        ".tekton/dapper-2.1.66-pull-request.yaml".pathChanged() ||
+        ".tekton/build-pipeline.yaml".pathChanged()
       )
   labels:
     appstudio.openshift.io/application: dotnet-pathfinding
