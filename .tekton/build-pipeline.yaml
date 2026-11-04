@@ -1,0 +1,88 @@
+# Adapted from konflux-ci/container-build-catalog:
+# pipelines/docker-build-oci-ta/docker-build-oci-ta.yaml
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: build-dotnet
+spec:
+  description: Build one pinned recipe into a NuGet OCI artifact.
+  params:
+  - name: git-url
+    type: string
+    description: Recipe-index repository URL.
+  - name: revision
+    type: string
+    description: Recipe-index revision.
+    default: ''
+  - name: output-image
+    type: string
+    description: Destination OCI repository and tag.
+  - name: image-expires-after
+    type: string
+    description: Quay artifact lifetime; empty keeps the artifact.
+    default: ''
+  - name: recipe
+    type: string
+    description: One recipe directory relative to the index checkout.
+  - name: builder-image
+    type: string
+    description: SDK builder image reference.
+  - name: build-task-bundle
+    type: string
+    description: Linux or Windows bundle exposing build-dotnet-package-oci-ta with the same parameters and results.
+  results:
+  - name: IMAGE_URL
+    value: $(tasks.build-package.results.IMAGE_URL)
+  - name: IMAGE_DIGEST
+    value: $(tasks.build-package.results.IMAGE_DIGEST)
+  - name: CHAINS-GIT_URL
+    value: $(tasks.clone-repository.results.url)
+  - name: CHAINS-GIT_COMMIT
+    value: $(tasks.clone-repository.results.commit)
+  tasks:
+  - name: clone-repository
+    params:
+    - name: url
+      value: $(params.git-url)
+    - name: revision
+      value: $(params.revision)
+    - name: ociStorage
+      value: $(params.output-image).git
+    - name: ociArtifactExpiresAfter
+      value: $(params.image-expires-after)
+    taskRef:
+      params:
+      - name: name
+        value: git-clone-oci-ta
+      - name: bundle
+        value: quay.io/konflux-ci/tekton-catalog/task-git-clone-oci-ta:0.2.4@sha256:df3c42d78223f07b40a84dd29e5c8860d14777ffdf150ea08c738770f51216dc
+      - name: kind
+        value: task
+      resolver: bundles
+    workspaces:
+    - name: basic-auth
+      workspace: git-auth
+  - name: build-package
+    params:
+    - name: SOURCE_ARTIFACT
+      value: $(tasks.clone-repository.results.SOURCE_ARTIFACT)
+    - name: RECIPE
+      value: $(params.recipe)
+    - name: BUILDER_IMAGE
+      value: $(params.builder-image)
+    - name: IMAGE
+      value: $(params.output-image)
+    - name: IMAGE_EXPIRES_AFTER
+      value: $(params.image-expires-after)
+    taskRef:
+      resolver: bundles
+      params:
+      - name: name
+        value: build-dotnet-package-oci-ta
+      - name: bundle
+        value: $(params.build-task-bundle)
+      - name: kind
+        value: task
+  workspaces:
+  - name: git-auth
+    optional: true
