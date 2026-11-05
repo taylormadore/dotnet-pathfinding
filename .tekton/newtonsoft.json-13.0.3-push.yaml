@@ -32,7 +32,7 @@ spec:
   - name: recipe
     value: recipes/Newtonsoft.Json/13.0.3
   - name: builder-image
-    value: quay.io/tmadore/dotnet-builder:dotnet-100@sha256:ce68b3a840425ae7cd1f66f01b9dfdc89d75e4111ec0edc6bc9871297717ed61
+    value: quay.io/tmadore/dotnet-builder:dotnet-100@sha256:35d0cd8c5afc1d782bfa30764eafde64d4c2527f5195b1111461e8921df7e98d
   - name: build-task-bundle
     value: quay.io/tmadore/dotnet-build-oci-ta@sha256:a723f7189d143ae8efdb0cb201ebd0d54021fb2fcdddf50cdf56bf927cccc9e3
   pipelineRef:
