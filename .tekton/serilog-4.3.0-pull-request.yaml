@@ -35,7 +35,7 @@ spec:
   - name: recipe
     value: recipes/Serilog/4.3.0
   - name: builder-image
-    value: quay.io/tmadore/dotnet-builder:dotnet-100@sha256:ddc4f30c07ac353f3098788cfd0965a37f74cf7d5d0fa827093ae132b3c1be38
+    value: quay.io/tmadore/dotnet-builder:dotnet-100@sha256:ce68b3a840425ae7cd1f66f01b9dfdc89d75e4111ec0edc6bc9871297717ed61
   - name: build-task-bundle
     value: quay.io/tmadore/dotnet-build-oci-ta@sha256:a723f7189d143ae8efdb0cb201ebd0d54021fb2fcdddf50cdf56bf927cccc9e3
   pipelineRef:

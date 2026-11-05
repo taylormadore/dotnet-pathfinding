@@ -1,0 +1,71 @@
+Subject: Restore .NET Framework reference assemblies from NuGet
+
+The Linux builder lacks the Windows developer packs used by these projects.
+Enable PackageReference restore and obtain Microsoft's compile-time reference
+assemblies for net20, net35, net40, and net45. PrivateAssets prevents this
+build-only dependency from becoming a dependency of the published package.
+
+diff --git a/Src/Newtonsoft.Json/Newtonsoft.Json.Net20.csproj b/Src/Newtonsoft.Json/Newtonsoft.Json.Net20.csproj
+index 436a3683..a001a687 100644
+--- a/Src/Newtonsoft.Json/Newtonsoft.Json.Net20.csproj
++++ b/Src/Newtonsoft.Json/Newtonsoft.Json.Net20.csproj
+@@ -1,5 +1,11 @@
+ ﻿<?xml version="1.0" encoding="utf-8"?>
+ <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
++  <PropertyGroup>
++    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
++  </PropertyGroup>
++  <ItemGroup>
++    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
++  </ItemGroup>
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+diff --git a/Src/Newtonsoft.Json/Newtonsoft.Json.Net35.csproj b/Src/Newtonsoft.Json/Newtonsoft.Json.Net35.csproj
+index 697a958c..1a9fd424 100644
+--- a/Src/Newtonsoft.Json/Newtonsoft.Json.Net35.csproj
++++ b/Src/Newtonsoft.Json/Newtonsoft.Json.Net35.csproj
+@@ -1,5 +1,11 @@
+ ﻿<?xml version="1.0" encoding="utf-8"?>
+ <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
++  <PropertyGroup>
++    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
++  </PropertyGroup>
++  <ItemGroup>
++    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
++  </ItemGroup>
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+diff --git a/Src/Newtonsoft.Json/Newtonsoft.Json.Net40.csproj b/Src/Newtonsoft.Json/Newtonsoft.Json.Net40.csproj
+index 2e41fe86..84af39af 100644
+--- a/Src/Newtonsoft.Json/Newtonsoft.Json.Net40.csproj
++++ b/Src/Newtonsoft.Json/Newtonsoft.Json.Net40.csproj
+@@ -1,5 +1,11 @@
+ ﻿<?xml version="1.0" encoding="utf-8"?>
+ <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
++  <PropertyGroup>
++    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
++  </PropertyGroup>
++  <ItemGroup>
++    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
++  </ItemGroup>
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+diff --git a/Src/Newtonsoft.Json/Newtonsoft.Json.csproj b/Src/Newtonsoft.Json/Newtonsoft.Json.csproj
+index 1055878b..26edcc1a 100644
+--- a/Src/Newtonsoft.Json/Newtonsoft.Json.csproj
++++ b/Src/Newtonsoft.Json/Newtonsoft.Json.csproj
+@@ -1,5 +1,11 @@
+ ﻿<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++  <PropertyGroup>
++    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
++  </PropertyGroup>
++  <ItemGroup>
++    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
++  </ItemGroup>
+   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
