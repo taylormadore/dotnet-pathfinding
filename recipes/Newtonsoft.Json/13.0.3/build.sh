@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+recipe_dir=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
 # Use the supported builder SDK; see README.md for the compatibility policy.
-sed -i 's/"latestFeature"/"latestMajor"/' "$SOURCE_DIR/Src/global.json"
-public_key=$(realpath "$(dirname "${BASH_SOURCE[0]}")/public-key.snk")
+git -C "$SOURCE_DIR" apply "$recipe_dir/01-sdk-roll-forward.patch"
+public_key="$recipe_dir/public-key.snk"
 cd "$SOURCE_DIR/Src"
 project=Newtonsoft.Json/Newtonsoft.Json.csproj
 # Upstream's release script supplies these instead of the project defaults.

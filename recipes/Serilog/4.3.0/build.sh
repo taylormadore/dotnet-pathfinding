@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Allow the supported SDK and include upstream's Windows-only .NET Framework targets.
-sed -i 's/"latestFeature"/"latestMajor"/' "$SOURCE_DIR/global.json"
+recipe_dir=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
+# Allow the supported builder SDK.
+git -C "$SOURCE_DIR" apply "$recipe_dir/01-sdk-roll-forward.patch"
+# Include upstream's Windows-only .NET Framework targets on Linux.
+git -C "$SOURCE_DIR" apply "$recipe_dir/02-framework-targets.patch"
 project="$SOURCE_DIR/src/Serilog/Serilog.csproj"
-sed -i '/<TargetFrameworks Condition=/s/ Condition="[^"]*"//' "$project"
-public_key=$(realpath "$(dirname "${BASH_SOURCE[0]}")/public-key.snk")
+public_key="$recipe_dir/public-key.snk"
 properties=(
     -p:ContinuousIntegrationBuild=true
     -p:IncludeSymbols=false

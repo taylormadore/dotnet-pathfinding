@@ -1,0 +1,16 @@
+Subject: Allow the supported builder SDK
+
+Upstream pins SDK 6 with feature-band roll-forward. Permit major-version
+roll-forward so the supported .NET 10 builder can build the same targets.
+
+diff --git a/Src/global.json b/Src/global.json
+--- a/Src/global.json
++++ b/Src/global.json
+@@ -1,6 +1,6 @@
+ {
+   "sdk": {
+     "version": "6.0.400",
+-    "rollForward": "latestFeature"
++    "rollForward": "latestMajor"
+   }
+ }
