@@ -1,0 +1,49 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  annotations:
+    # Each recipe produces an independent snapshot for this component.
+    test.appstudio.openshift.io/ignore-supersession: "true"
+    build.appstudio.openshift.io/repo: https://github.com/taylormadore/dotnet-pathfinding?rev={{revision}}
+    build.appstudio.redhat.com/commit_sha: '{{revision}}'
+    build.appstudio.redhat.com/pull_request_number: '{{pull_request_number}}'
+    build.appstudio.redhat.com/target_branch: '{{target_branch}}'
+    pipelinesascode.tekton.dev/cancel-in-progress: "true"
+    pipelinesascode.tekton.dev/max-keep-runs: "3"
+    pipelinesascode.tekton.dev/on-cel-expression: |
+      event == "pull_request" && target_branch == "main" && (
+        "recipes/Dapper/2.1.66/**".pathChanged() ||
+        ".tekton/dapper-2.1.66-pull-request.yaml".pathChanged() ||
+        ".tekton/build-pipeline.yaml".pathChanged()
+      )
+  labels:
+    appstudio.openshift.io/application: dotnet-pathfinding
+    appstudio.openshift.io/component: dotnet-pathfinding-e2170
+    pipelines.appstudio.openshift.io/type: build
+  name: dapper-2-1-66-on-pull-request
+  namespace: tmadore-tenant
+spec:
+  params:
+  - name: git-url
+    value: '{{source_url}}'
+  - name: revision
+    value: '{{revision}}'
+  - name: output-image
+    value: quay.io/redhat-user-workloads-stage/tmadore-tenant/dotnet-pathfinding-e2170:dapper-2.1.66-on-pr-{{revision}}
+  - name: image-expires-after
+    value: 5d
+  - name: recipe
+    value: recipes/Dapper/2.1.66
+  - name: builder-image
+    value: quay.io/tmadore/dotnet-builder:dotnet-100@sha256:f32b4bc91f918396d07529945a6bc085795e43f9b84097a902b0b17e05b83ddf
+  - name: build-task-bundle
+    value: quay.io/tmadore/dotnet-build-oci-ta@sha256:a723f7189d143ae8efdb0cb201ebd0d54021fb2fcdddf50cdf56bf927cccc9e3
+  pipelineRef:
+    name: build-dotnet
+  taskRunTemplate:
+    serviceAccountName: build-pipeline-dotnet-pathfinding-e2170
+  workspaces:
+  - name: git-auth
+    secret:
+      secretName: '{{ git_auth_secret }}'
+status: {}

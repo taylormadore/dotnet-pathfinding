@@ -1,0 +1,58 @@
+Subject: Reproduce the release versioning and package layout
+
+Upstream's release script replaces stale assembly-version defaults and fills
+in the package version. Set those values to match the official 9.0.1 package.
+List the seven rebuilt assemblies, their XML documentation, and upstream's
+install script so dotnet pack preserves the published package file layout
+and existing dependency groups.
+
+diff --git a/Build/Newtonsoft.Json.nuspec b/Build/Newtonsoft.Json.nuspec
+index e5418d7b..830bd754 100644
+--- a/Build/Newtonsoft.Json.nuspec
++++ b/Build/Newtonsoft.Json.nuspec
+@@ -2,7 +2,7 @@
+ <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+     <metadata>
+         <id>Newtonsoft.Json</id>
+-        <version></version>
++        <version>9.0.1</version>
+         <title>Json.NET</title>
+         <description>Json.NET is a popular high-performance JSON framework for .NET</description>
+         <authors>James Newton-King</authors>
+@@ -44,4 +44,21 @@
+             </group>
+         </dependencies>
+     </metadata>
++    <files>
++        <file src="Build/install.ps1" target="tools/install.ps1" />
++        <file src="Src/Newtonsoft.Json/bin/Release/Net20/Newtonsoft.Json.dll" target="lib/net20" />
++        <file src="Src/Newtonsoft.Json/bin/Release/Net20/Newtonsoft.Json.xml" target="lib/net20" />
++        <file src="Src/Newtonsoft.Json/bin/Release/Net35/Newtonsoft.Json.dll" target="lib/net35" />
++        <file src="Src/Newtonsoft.Json/bin/Release/Net35/Newtonsoft.Json.xml" target="lib/net35" />
++        <file src="Src/Newtonsoft.Json/bin/Release/Net40/Newtonsoft.Json.dll" target="lib/net40" />
++        <file src="Src/Newtonsoft.Json/bin/Release/Net40/Newtonsoft.Json.xml" target="lib/net40" />
++        <file src="Src/Newtonsoft.Json/bin/Release/Net45/Newtonsoft.Json.dll" target="lib/net45" />
++        <file src="Src/Newtonsoft.Json/bin/Release/Net45/Newtonsoft.Json.xml" target="lib/net45" />
++        <file src="Src/Newtonsoft.Json/bin/Release/netstandard1.0/Newtonsoft.Json.dll" target="lib/netstandard1.0" />
++        <file src="Src/Newtonsoft.Json/bin/Release/netstandard1.0/Newtonsoft.Json.xml" target="lib/netstandard1.0" />
++        <file src="Src/Newtonsoft.Json/bin/Release/Portable/Newtonsoft.Json.dll" target="lib/portable-net45+wp80+win8+wpa81" />
++        <file src="Src/Newtonsoft.Json/bin/Release/Portable/Newtonsoft.Json.xml" target="lib/portable-net45+wp80+win8+wpa81" />
++        <file src="Src/Newtonsoft.Json/bin/Release/Portable40/Newtonsoft.Json.dll" target="lib/portable-net40+sl5+wp80+win8+wpa81" />
++        <file src="Src/Newtonsoft.Json/bin/Release/Portable40/Newtonsoft.Json.xml" target="lib/portable-net40+sl5+wp80+win8+wpa81" />
++    </files>
+ </package>
+\ No newline at end of file
+diff --git a/Src/Newtonsoft.Json/Properties/AssemblyInfo.cs b/Src/Newtonsoft.Json/Properties/AssemblyInfo.cs
+index 62cc370e..e3101fa1 100644
+--- a/Src/Newtonsoft.Json/Properties/AssemblyInfo.cs
++++ b/Src/Newtonsoft.Json/Properties/AssemblyInfo.cs
+@@ -94,6 +94,6 @@
+ // You can specify all the values or you can default the Revision and Build Numbers 
+ // by using the '*' as shown below:
+ 
+-[assembly: AssemblyVersion("7.0.0.0")]
+-[assembly: AssemblyFileVersion("7.0.2.18802")]
++[assembly: AssemblyVersion("9.0.0.0")]
++[assembly: AssemblyFileVersion("9.0.1.19813")]
+ [assembly: CLSCompliant(true)]
+\ No newline at end of file

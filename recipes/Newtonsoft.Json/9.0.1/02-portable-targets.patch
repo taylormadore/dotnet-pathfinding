@@ -1,0 +1,82 @@
+Subject: Build the two portable profiles with the current compiler
+
+SDK 10 lacks Microsoft.Portable.CSharp.targets. Use its ordinary C# targets
+with the archived reference assemblies fetched by build.sh. Keep the original
+Profile259/Profile328 targets and source lists. NoStdLib and AssemblySearchPaths
+restrict compilation to the supplied references instead of a host framework.
+The reference-root directory gives MSBuild its expected .NETPortable layout.
+
+diff --git a/Src/Newtonsoft.Json/Newtonsoft.Json.Portable.csproj b/Src/Newtonsoft.Json/Newtonsoft.Json.Portable.csproj
+index 56f6b0ce..2ff63a44 100644
+--- a/Src/Newtonsoft.Json/Newtonsoft.Json.Portable.csproj
++++ b/Src/Newtonsoft.Json/Newtonsoft.Json.Portable.csproj
+@@ -1,5 +1,11 @@
+ ﻿<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++  <PropertyGroup>
++    <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
++    <TargetFrameworkRootPath>$(MSBuildThisFileDirectory)../../.reference-root/</TargetFrameworkRootPath>
++    <NoStdLib>true</NoStdLib>
++    <AssemblySearchPaths>{HintPathFromItem};{RawFileName}</AssemblySearchPaths>
++  </PropertyGroup>
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+@@ -39,10 +45,7 @@
+     <CodeAnalysisRuleSet>Newtonsoft.Json.ruleset</CodeAnalysisRuleSet>
+   </PropertyGroup>
+   <ItemGroup>
+-    <Reference Include="System" />
+-    <Reference Include="System.Core" />
+-    <Reference Include="System.Runtime.Serialization" />
+-    <Reference Include="System.Xml" />
++    <Reference Include="$(MSBuildThisFileDirectory)../../.portable-references/v4.5/Profile/Profile259/*.dll" />
+   </ItemGroup>
+   <ItemGroup>
+     <Compile Include="Bson\BsonBinaryType.cs" />
+@@ -247,7 +250,7 @@
+     <Compile Include="Utilities\ValidationUtils.cs" />
+     <Compile Include="WriteState.cs" />
+   </ItemGroup>
+-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
++  <Import Project="$(MSBuildToolsPath)/Microsoft.CSharp.targets" />
+   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+        Other similar extension points exist, see Microsoft.Common.targets.
+   <Target Name="BeforeBuild">
+diff --git a/Src/Newtonsoft.Json/Newtonsoft.Json.Portable40.csproj b/Src/Newtonsoft.Json/Newtonsoft.Json.Portable40.csproj
+index 55c3494a..f8e17ffb 100644
+--- a/Src/Newtonsoft.Json/Newtonsoft.Json.Portable40.csproj
++++ b/Src/Newtonsoft.Json/Newtonsoft.Json.Portable40.csproj
+@@ -1,5 +1,11 @@
+ ﻿<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
++  <PropertyGroup>
++    <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
++    <TargetFrameworkRootPath>$(MSBuildThisFileDirectory)../../.reference-root/</TargetFrameworkRootPath>
++    <NoStdLib>true</NoStdLib>
++    <AssemblySearchPaths>{HintPathFromItem};{RawFileName}</AssemblySearchPaths>
++  </PropertyGroup>
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+@@ -44,10 +50,7 @@
+     <CodeAnalysisRuleSet>Newtonsoft.Json.ruleset</CodeAnalysisRuleSet>
+   </PropertyGroup>
+   <ItemGroup>
+-    <Reference Include="System" />
+-    <Reference Include="System.Core" />
+-    <Reference Include="System.Runtime.Serialization" />
+-    <Reference Include="System.Xml" />
++    <Reference Include="$(MSBuildThisFileDirectory)../../.portable-references/v4.0/Profile/Profile328/*.dll" />
+   </ItemGroup>
+   <ItemGroup>
+     <Compile Include="Bson\BsonBinaryType.cs" />
+@@ -252,7 +255,7 @@
+     <Compile Include="Utilities\ValidationUtils.cs" />
+     <Compile Include="WriteState.cs" />
+   </ItemGroup>
+-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
++  <Import Project="$(MSBuildToolsPath)/Microsoft.CSharp.targets" />
+   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+        Other similar extension points exist, see Microsoft.Common.targets.
+   <Target Name="BeforeBuild">

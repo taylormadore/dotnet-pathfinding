@@ -1,0 +1,18 @@
+Subject: Include .NET Framework targets when building on Linux
+
+Upstream limits net471 and net462 to Windows builds. Include them on Linux
+as well so the rebuilt package contains all six official assemblies. The
+SDK restores the required reference packs.
+
+diff --git a/src/Serilog/Serilog.csproj b/src/Serilog/Serilog.csproj
+--- a/src/Serilog/Serilog.csproj
++++ b/src/Serilog/Serilog.csproj
+@@ -5,7 +5,7 @@
+     <Copyright>Copyright © Serilog Contributors</Copyright>
+     <AssemblyVersion>$(VersionPrefix.Substring(0,3)).0.0</AssemblyVersion>
+     <!-- .NET Framework version targeting is frozen at these two TFMs. -->
+-    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT'">net471;net462</TargetFrameworks>
++    <TargetFrameworks>net471;net462</TargetFrameworks>
+     <!-- Policy is to trim TFM-specific builds to `netstandard2.0`, `net6.0`,
+     all active LTS versions, and optionally the latest RTM version, when releasing new
+     major Serilog versions. -->
