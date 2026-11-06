@@ -14,7 +14,7 @@ the official package without suppressions.
 | `01-framework-references.patch` | The four .NET Framework projects are old-style `.csproj` files, not SDK-style. They expect installed targeting packs. This patch enables NuGet restore of Microsoft's reference assemblies for net20, net35, net40, and net45. |
 | `02-portable-targets.patch` | SDK 10 lacks the old portable build targets and profile references. Use current C# build targets with Profile259/Profile328 references fetched from a pinned commit of Mono's `linux-packaging-referenceassemblies-pcl` repository. |
 | `03-netstandard-project.patch` | Replace the unsupported `project.json` build entry point with an SDK-style project for **netstandard1.0 only**. Preserve its dependency versions and compilation symbols; disable implicit framework references to avoid introducing conflicting dependencies. |
-| `04-release-package.patch` | Supply the assembly/file/package versions and package layout normally set by upstream's release script. Collect all seven assemblies and XML documentation while retaining upstream dependency groups. |
+| `04-release-package.patch` | Supply the assembly/file/package versions and package layout normally set by upstream's release script. Collect all seven assemblies, XML documentation, and the upstream install script while retaining upstream dependency groups. |
 
 Restore uses NuGet.org instead of upstream's unavailable MyGet feed. Legacy code
 analysis is disabled. Source code is unchanged except for release-version fields.
@@ -26,3 +26,6 @@ analysis is disabled. Source code is unchanged except for release-version fields
 - SDK 2.1's `dotnet migrate` was tested as an onboarding aid. It preserved dependency versions but dropped the .NET Standard target's `PORTABLE` symbol and still needed explicit-reference configuration for SDK 10. Its output is not a drop-in replacement for patch 03.
 - Public signing preserves assembly identity but does not produce a valid private-key signature. See the [shared recipe notes](../../README.md). ApiCompat does not establish runtime behavior or dependency-resolution equivalence; upstream tests have not been run for this rebuild.
 - Modern NuGet warns about upstream portable dependency-group spelling and legacy package metadata. These are retained. The shared checker must decode URI-escaped paths: the official package uses `%2B` where current NuGet writes `+`.
+
+Include upstream’s `Build/install.ps1` as `tools/install.ps1`, preserving its
+Visual Studio installation-page behavior.

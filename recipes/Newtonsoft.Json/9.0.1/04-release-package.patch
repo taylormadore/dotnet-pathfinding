@@ -2,8 +2,9 @@ Subject: Reproduce the release versioning and package layout
 
 Upstream's release script replaces stale assembly-version defaults and fills
 in the package version. Set those values to match the official 9.0.1 package.
-List the seven rebuilt assemblies and their XML documentation explicitly so
-dotnet pack can assemble the package using upstream's existing dependency groups.
+List the seven rebuilt assemblies, their XML documentation, and upstream's
+install script so dotnet pack preserves the published package file layout
+and existing dependency groups.
 
 diff --git a/Build/Newtonsoft.Json.nuspec b/Build/Newtonsoft.Json.nuspec
 index e5418d7b..830bd754 100644
@@ -18,11 +19,12 @@ index e5418d7b..830bd754 100644
          <title>Json.NET</title>
          <description>Json.NET is a popular high-performance JSON framework for .NET</description>
          <authors>James Newton-King</authors>
-@@ -44,4 +44,20 @@
+@@ -44,4 +44,21 @@
              </group>
          </dependencies>
      </metadata>
 +    <files>
++        <file src="Build/install.ps1" target="tools/install.ps1" />
 +        <file src="Src/Newtonsoft.Json/bin/Release/Net20/Newtonsoft.Json.dll" target="lib/net20" />
 +        <file src="Src/Newtonsoft.Json/bin/Release/Net20/Newtonsoft.Json.xml" target="lib/net20" />
 +        <file src="Src/Newtonsoft.Json/bin/Release/Net35/Newtonsoft.Json.dll" target="lib/net35" />
